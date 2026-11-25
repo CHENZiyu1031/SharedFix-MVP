@@ -1,0 +1,16 @@
+{
+  "case": "Illustrative shared migration of a legacy wallet connector",
+  "termsVersion": "sharedfix-demo-v1",
+  "deliverable": "One upstream release with reproducible fixtures for three downstream integrations",
+  "acceptance": ["Discover both injected providers", "Repeat with the opposite provider load order", "Route connection to the wallet selected by the end user"],
+  "buyerShares": [4000, 3000, 3000],
+  "currency": "Mock USDC with 6 decimals",
+  "fundingPeriodSeconds": 86400,
+  "deliveryPeriodSeconds": 259200,
+  "reviewPeriodSeconds": 432000,
+  "challengePeriodSeconds": 172800,
+  "refereePeriodSecondsPerReferee": 432000,
+  "maintainerPayment": 9500,
+  "platformFee": 500,
+  "demoOnly": true
+}

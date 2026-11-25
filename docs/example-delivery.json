@@ -1,0 +1,7 @@
+{
+  "document": "Illustrative release submission",
+  "release": "wallet-connector-demo-v1.0.0",
+  "acceptanceFixtures": ["Application A: two providers discovered", "Application B: reversed loading order", "Application C: selected provider handles the connection"],
+  "purpose": "A sample document committed to the Demo order for human review.",
+  "actualApplicationTestsPerformed": false
+}
