@@ -10,6 +10,7 @@ const assetFiles = {
   '/': ['web/index.html', 'text/html; charset=utf-8'],
   '/index.html': ['web/index.html', 'text/html; charset=utf-8'],
   '/styles.css': ['web/styles.css', 'text/css; charset=utf-8'],
+  '/demo-client.js': ['web/server-client.js', 'text/javascript; charset=utf-8'],
   '/app.js': ['web/app.js', 'text/javascript; charset=utf-8'],
   '/example-delivery.json': ['docs/example-delivery.json', 'application/json; charset=utf-8'],
   '/order-terms.json': ['docs/order-terms.json', 'application/json; charset=utf-8']

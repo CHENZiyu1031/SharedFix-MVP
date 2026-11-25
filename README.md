@@ -1,8 +1,26 @@
 # SharedFix MVP
 
-SharedFix 是开源软件升级联合采购的课堂原型。三家应用团队为同一项钱包连接器升级分别出资 4,000、3,000 和 3,000 mUSDC。可以在浏览器中切换角色，观察智能合约何时允许付款、复核或退款。mUSDC 是模拟代币，余额和交易回执来自本机运行的 Ganache 测试链。
+SharedFix 是开源软件升级联合采购的课堂原型。三家应用团队为同一项钱包连接器升级分别出资 4,000、3,000 和 3,000 mUSDC。可以在浏览器中切换角色，观察智能合约何时允许付款、复核或退款。mUSDC 是模拟代币，余额和交易回执来自 Ganache 测试链。
 
-## 本地启动
+## 纯浏览器版
+
+浏览器在 Web Worker 中运行 Ganache 测试链并执行 Solidity 合约。部署只需静态文件。每个浏览器标签页拥有独立的三个测试订单，刷新或关闭该页会清空其进度。
+
+可用 Node.js 20 或更高版本及 pnpm 9 构建，用 Python 3 本地预览：
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run build:browser
+python3 -m http.server 8080 --bind 127.0.0.1 --directory dist
+```
+
+打开 [本地浏览器版](http://127.0.0.1:8080/)。构建使用 `artifacts/` 中的合约产物。修改 Solidity 后，先运行 `pnpm run build` 再构建浏览器版。
+
+### GitHub Pages 发布
+
+在仓库的 **Settings → Pages → Build and deployment** 中选择 **GitHub Actions**。如果 `github-pages` 环境限制了部署分支，在 **Settings → Environments → github-pages** 中允许 `Improvement1_1`。推送此分支会触发工作流，构建并发布 `dist/`。部署成功后，工作流会显示可用于生成二维码的网站地址。
+
+## 本地 Node.js 版
 
 安装 Node.js 20 或更高版本，以及能读取 v9 锁文件的 pnpm（如 pnpm 9）。克隆仓库并进入含 `package.json` 的目录，运行：
 
@@ -30,7 +48,9 @@ pnpm start
 | --- | --- |
 | `contracts/` | 联合采购订单与模拟代币的 Solidity 合约 |
 | `compile.cjs` | 编译合约，将 ABI 和字节码写入 `artifacts/` |
-| `engine.cjs`、`server.cjs` | 创建测试账户与场景，执行交易并向本地页面提供数据 |
+| `demo-engine.js` | 创建测试账户与场景，执行交易，并读取链上状态 |
+| `engine.cjs`、`server.cjs` | 在 Node.js 中运行演示并提供 HTTP API |
+| `browser-build.cjs`、`web/demo-worker.js` | 生成静态网站并在浏览器后台运行测试链 |
 | `web/` | 浏览器页面、交互和样式 |
 | `docs/` | [订单条款](docs/order-terms.json)、[交付材料样例](docs/example-delivery.json)与演示指南 |
 | `verify.cjs` | 使用本地链检查筹资、结算、退款和复核流程 |

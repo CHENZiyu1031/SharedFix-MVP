@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.cjs",
     "build": "node compile.cjs",
+    "build:browser": "node browser-build.cjs",
     "verify": "node verify.cjs"
   },
   "engines": { "node": ">=20" },

@@ -17,6 +17,8 @@ const element = (id) => document.getElementById(id);
 const money = (value) => numbers.format(Number(value ?? 0));
 const shortened = (value) => value && value.length > 18 ? `${value.slice(0, 9)}…${value.slice(-6)}` : value;
 
+const demoClient = createDemoClient();
+
 let snapshot = null;
 let scenarioId = 'success';
 let reviewPath = 'timeout';
@@ -260,20 +262,11 @@ function render() {
   renderNavigation();
   if (!snapshot?.scenarios?.[scenarioId]) return;
   const order = snapshot.scenarios[scenarioId];
-  element('network-label').textContent = connected ? 'Local EVM' : 'Local server unavailable';
+  element('network-label').textContent = connected ? demoClient.readyLabel : demoClient.errorLabel;
   element('network-light').className = `network-light ${connected ? 'online' : 'offline'}`;
   renderOrder(order);
   renderPhases(order);
   renderReceipts(order);
-}
-
-async function request(path, data) {
-  const response = await fetch(path, data ? {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
-  } : { cache: 'no-store' });
-  const result = await response.json();
-  if (!result?.scenarios) throw new Error(result?.message || result?.error || `Local server returned ${response.status}`);
-  return result;
 }
 
 async function run(item) {
@@ -289,7 +282,7 @@ async function run(item) {
   message = null;
   render();
   try {
-    const result = await request('/api/action', { scenario: scenarioId, action: item.action, role: item.role });
+    const result = await demoClient.action(scenarioId, item.action, item.role);
     snapshot = result;
     connected = true;
     const latest = result.lastResult;
@@ -302,9 +295,9 @@ async function run(item) {
       message = { text: latest.message, kind: latest.ok ? 'success' : 'error' };
     }
   } catch (error) {
-    message = { text: error.message || 'The local server did not respond. Try again.', kind: 'error' };
+    message = { text: error.message || 'The test chain did not respond. Try again.', kind: 'error' };
     try {
-      snapshot = await request('/api/state');
+      snapshot = await demoClient.snapshot();
       connected = true;
     } catch {
       connected = false;
@@ -319,17 +312,18 @@ async function run(item) {
 async function load() {
   element('next').disabled = true;
   try {
-    snapshot = await request('/api/state');
+    snapshot = await demoClient.start();
     connected = true;
     scenarioId = scenarioList.some((item) => item.id === snapshot.activeScenario) ? snapshot.activeScenario : 'success';
     element('reset').onclick = () => run(command('Reset demo', 'reset'));
     render();
-  } catch {
+  } catch (error) {
+    console.error('SharedFix could not start the demo.', error);
     connected = false;
-    element('network-label').textContent = 'Local server unavailable';
+    element('network-label').textContent = demoClient.errorLabel;
     element('network-light').className = 'network-light offline';
     element('order-state').textContent = 'Offline';
-    element('scenario-summary').textContent = 'Start the SharedFix local demo and open its local address.';
+    element('scenario-summary').textContent = demoClient.retryMessage;
     element('next').textContent = 'Retry connection';
     element('next').disabled = false;
     element('next').onclick = load;
