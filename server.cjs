@@ -9,6 +9,8 @@ const host = '127.0.0.1';
 const assetFiles = {
   '/': ['web/index.html', 'text/html; charset=utf-8'],
   '/index.html': ['web/index.html', 'text/html; charset=utf-8'],
+  '/dm-sans-latin.woff2': ['web/dm-sans-latin.woff2', 'font/woff2'],
+  '/dm-sans-LICENSE.txt': ['web/dm-sans-LICENSE.txt', 'text/plain; charset=utf-8'],
   '/styles.css': ['web/styles.css', 'text/css; charset=utf-8'],
   '/demo-client.js': ['web/server-client.js', 'text/javascript; charset=utf-8'],
   '/app.js': ['web/app.js', 'text/javascript; charset=utf-8'],

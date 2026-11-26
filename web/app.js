@@ -149,7 +149,7 @@ function renderOrder(order) {
   element('funded').textContent = money(order.funded);
   element('target').textContent = money(order.target);
   element('escrow-balance').textContent = `${money(order.escrow)} USDC`;
-  element('approvals').textContent = `${order.approvalCount} / 2 needed`;
+  element('approvals').textContent = `${order.approvalCount} / 2`;
   element('deadline').textContent = order.funded >= order.target ? 'Met' : order.deadlines.funding <= (order.now ?? snapshot.now) ? 'Passed' : 'Open';
   element('deadline').title = order.deadlines.funding ? new Date(order.deadlines.funding * 1000).toISOString() : '';
   const track = element('funding-track');
@@ -163,7 +163,7 @@ function renderOrder(order) {
     const row = make('tr');
     const nameCell = make('td');
     const name = make('span', 'buyer-name');
-    name.append(make('span', 'buyer-key', id), make('span', '', buyer.name || `Buyer ${id}`));
+    name.textContent = buyer.name || `Buyer ${id}`;
     name.title = buyer.address || '';
     nameCell.append(name);
     row.append(nameCell, make('td', '', money(buyer.share)), make('td', paid ? 'refunded-cell' : buyer.deposit ? 'funded-cell' : '', paid ? `${money(buyer.deposit)} returned` : money(buyer.deposit)), make('td', '', money(buyer.balance)));
